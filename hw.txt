@@ -1,0 +1,30 @@
+hw.txt
+
+
+
+Make the Islands run concurrently
+	- each island should run in its own goroutine
+	- each island should have a channel from which commands can be recieved from the search goroutine.
+	- the quit command signal should be round trip
+
+Currently the reporting is done asynchonously, by buffering the channels
+Convert the reporting channels to the fanIn pattern and make them run synchonously, by removing the buffering of the channels
+
+Add asyncronous migration to the islands
+	This will involve adding channels between the islands
+	you will also need to add incoming migrants to the general population
+	hint: the underlying Expr member of Eqn has a Clone method
+
+You will have to choose where and when communications happens
+	hint: use (a) select statement(s), do you need a default case?
+
+
+You will need to write a report describing your changes
+please reference the relevant files and functions for each change
+
+bonus points for reporting the correct results.
+choose one equation for each data set.
+note: it may not be the most accurate equation.
+also it may not be reported by the program each time.
+you should run each data set multiple times to obtain more conclusive results.
+

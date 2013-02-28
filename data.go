@@ -6,9 +6,7 @@ import (
 	"io/ioutil"
 )
 
-type Eqn func([]float64) float64
-
-type Data struct {
+type DataSet struct {
 	input  [][]float64
 	output []float64
 
@@ -16,15 +14,15 @@ type Data struct {
 	out_name  string
 }
 
-func (d *Data) length() int {
+func (d *DataSet) length() int {
 	return len(d.input)
 }
-func (d *Data) dimensions() int {
+func (d *DataSet) dimensions() int {
 	return len(d.input[0])
 }
 
-func readDataFile(filename string) (d *Data) {
-	d = new(Data)
+func readDataSetFile(filename string) (d *DataSet) {
+	d = new(DataSet)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		fmt.Println("Error opening file: ", filename)
