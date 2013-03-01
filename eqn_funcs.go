@@ -283,6 +283,22 @@ func (self *EqnList) Remove(node *EqnListNode) {
 	self.length--
 }
 
+type EqnArray []*Eqn
+
+func (ea EqnArray) Len() int { return len(ea) }
+func (ea EqnArray) Less(i, j int) bool {
+	if ea[i] == nil {
+		return false
+	}
+	if ea[j] == nil {
+		return true
+	}
+	return ea[i].eqn.AmILess(ea[j].eqn)
+}
+func (ea EqnArray) Swap(i, j int) {
+	ea[i], ea[j] = ea[j], ea[i]
+}
+
 type SortType int
 
 const (

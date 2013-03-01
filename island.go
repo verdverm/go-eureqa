@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 
 	. "github.com/verdverm/go-symexpr"
 )
@@ -64,19 +65,22 @@ func (I *Island) reportEqns() {
 }
 
 func (I *Island) evalEqns() {
-	for e := 0; e < len(I.eqns); e++ {
+	for e := 0; e < len(I.offs); e++ {
+		if I.offs[e] == nil {
+			continue
+		}
 		err_sum := 0.0
 		for p := 0; p < I.data.length(); p++ {
 			f_in := I.data.input[p]
 			f_out := I.data.output[p]
-			e_out := I.eqns[e].eqn.Eval(0, f_in, nil, nil)
+			e_out := I.offs[e].eqn.Eval(0, f_in, nil, nil)
 			diff := math.Abs(f_out - e_out)
 			err_sum += diff
 		}
 
-		I.eqns[e].err = err_sum / float64(I.data.length())
-		if badEqnFilter(I.eqns[e]) {
-			I.eqns[e] = nil
+		I.offs[e].err = err_sum / float64(I.data.length())
+		if badEqnFilter(I.offs[e]) {
+			I.offs[e] = nil
 		}
 	}
 
@@ -84,8 +88,29 @@ func (I *Island) evalEqns() {
 
 func (I *Island) selectEqns() {
 
-	temp := make([]*Eqn, len(I.eqns))
+	// collect all of the equations
+	temp := make([]*Eqn, len(I.eqns)+len(I.offs))
 	copy(temp, I.eqns)
+	copy(temp[len(I.eqns):], I.offs)
+
+	// filter so we only have unique equations
+	sort.Sort(EqnArray(temp))
+	last := 0
+	for temp[last] == nil {
+		last++
+	}
+	for i := last + 1; i < len(temp); i++ {
+		if temp[i] == nil {
+			continue
+		}
+		if temp[i].eqn.AmIAlmostSame(temp[last].eqn) {
+			temp[i] = nil
+		} else {
+			last = i
+		}
+	}
+
+	// sort the unique equations
 	pareto := NewQueueFromArray(temp)
 	pareto.ParetoSort()
 	copy(I.eqns, temp)
@@ -152,10 +177,10 @@ func (I *Island) breedEqns() {
 func (I *Island) initEqns() {
 	I.eqns = make([]*Eqn, I.params.PopSize)
 	I.offs = make([]*Eqn, I.params.PopSize)
-	for e := 0; e < len(I.eqns); e++ {
+	for e := 0; e < len(I.offs); e++ {
 		new_eqn := ExprGen(&I.params.treep, I.rng)
 		// fmt.Printf("%d: %v\n", e, new_eqn)
-		I.eqns[e] = &Eqn{new_eqn, new_eqn.Size(), -1.0} // -1 because actual errors are >= 0
+		I.offs[e] = &Eqn{new_eqn, new_eqn.Size(), -1.0} // -1 because actual errors are >= 0
 	}
 
 }
