@@ -126,12 +126,30 @@ func (S *Search) printBestEqns() {
 }
 
 /*
-Apprenticeship Patterns - Oreilly Publishing
 
-The Talent Code - Daniel Coyle
+Unit Testing
+TEST DRIVEN DEVELOPMENT (TDD)
+  - [BDD] Behavior Driven Development 
+  -
 
-Mind, Brain, & Education
 
-The Lean Startup - Eric Ries
+-----------------------
 
+Books:
+	Apprenticeship Patterns - Oreilly Publishing
+	The Talent Code - Daniel Coyle
+	Mind, Brain, & Education - 
+	The Lean Startup - Eric Ries
+	Code Specification by Example (BDD?) - 
+
+Trends:
+	functional programming
+	NoSQL data store
+	Single page apps
+	Mobile strategies
+	Cloud hosting
+		AWS
+		GAE
+		Heroku
+	Big Data
 */
